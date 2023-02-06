@@ -1,11 +1,12 @@
 import { useFrame } from "@react-three/fiber";
 import { Vector3 } from "three";
 import { ECS } from "../state";
+import { vec3 } from "@react-three/rapier";
 
 const bodyTarget = new Vector3();
 const lookTarget = new Vector3();
 
-const players = ECS.world.with("isPlayer", "transform");
+const players = ECS.world.with("isPlayer", "rigidBody");
 const cameras = ECS.world.with("isCamera", "transform");
 
 export const CameraRigSystem = ({
@@ -22,10 +23,11 @@ export const CameraRigSystem = ({
       return;
     }
 
-    bodyTarget.copy(player.transform.position).add(offset);
+    const playerPos = vec3(player.rigidBody.translation());
+    bodyTarget.copy(playerPos).add(offset);
     lookTarget.copy(camera.transform.position).sub(offset);
 
-    camera.transform.position.lerp(bodyTarget, dt * 2);
+    camera.transform.position.lerp(bodyTarget, dt * 3);
     camera.transform.lookAt(lookTarget);
   });
 

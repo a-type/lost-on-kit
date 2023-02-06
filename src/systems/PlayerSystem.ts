@@ -1,4 +1,5 @@
 import { useFrame } from "@react-three/fiber";
+import { vec3 } from "@react-three/rapier";
 import { hasComponents } from "miniplex";
 import { Vector3 } from "three";
 import { ECS, Entity, Player } from "../state";
@@ -8,9 +9,15 @@ function isPlayer(entity: Entity): entity is Player {
   return hasComponents(entity, "isPlayer");
 }
 
-const players = ECS.world.with("isPlayer");
+const players = ECS.world.with("isPlayer", "rigidBody", "characterController");
 
-const tmpVec3 = new Vector3();
+const tmpInputVec = new Vector3();
+const tmpVelocity = new Vector3();
+const tmpTranslation = new Vector3();
+const tmpMovement = new Vector3();
+
+const moveSpeed = 3;
+const gravity = 1;
 
 export const PlayerSystem = () => {
   const keyboard = useKeyboard();
@@ -18,6 +25,19 @@ export const PlayerSystem = () => {
   useFrame((_, dt) => {
     const [player] = players;
     if (!player) return;
+
+    if (!player.rigidBody.numColliders()) {
+      console.warn("No player colliders");
+      return;
+    }
+    const collider = player.rigidBody.collider(0);
+    const controller = player.characterController;
+    const rigidBody = player.rigidBody;
+
+    if (!controller) {
+      console.warn("No player controller");
+      return;
+    }
 
     const input = {
       x:
@@ -29,10 +49,19 @@ export const PlayerSystem = () => {
     };
 
     if (input.x !== 0 || input.y !== 0) {
-      tmpVec3.set(input.x * 10, -input.y * 10, 0);
-      player.physics.velocity.addScaledVector(tmpVec3, dt);
-      player.physics.sleeping = false;
+      tmpInputVec.set(input.x, -input.y, -gravity);
+    } else {
+      tmpInputVec.set(0, 0, -gravity);
     }
+
+    tmpVelocity.copy(vec3(rigidBody.linvel()));
+
+    controller.computeColliderMovement(collider, tmpInputVec);
+
+    tmpTranslation.copy(vec3(rigidBody.translation()));
+    tmpMovement.copy(vec3(controller.computedMovement()));
+    tmpTranslation.addScaledVector(tmpMovement, dt * moveSpeed);
+    rigidBody.setNextKinematicTranslation(tmpTranslation);
   });
 
   return null;

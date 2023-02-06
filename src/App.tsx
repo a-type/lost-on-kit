@@ -11,6 +11,7 @@ import { Terrains } from "./entities/Terrains";
 import { PixelationEffect } from "./lib/PixelationEffect";
 import { ECS } from "./state";
 import { Systems } from "./Systems";
+import { Debug, Physics } from "@react-three/rapier";
 
 function App() {
   return (
@@ -30,24 +31,27 @@ function App() {
             <color args={["#223"]} attach="background" />
 
             <Suspense>
-              <Environment preset="sunset" />
+              <Physics gravity={[0, 0, 0]}>
+                <Environment preset="sunset" />
 
-              <ambientLight intensity={0.5} />
-              <directionalLight position={[0, 0, 1]} intensity={1.5} />
+                <ambientLight intensity={0.5} />
+                <directionalLight position={[0, 0, 1]} intensity={1.5} />
 
-              {/* Main camera */}
-              <ECS.Entity>
-                <ECS.Component name="isCamera" data={true} />
-                <ECS.Component name="transform">
-                  <PerspectiveCamera position={[0, 0, 10]} makeDefault />
-                </ECS.Component>
-              </ECS.Entity>
+                {/* Main camera */}
+                <ECS.Entity>
+                  <ECS.Component name="isCamera" data={true} />
+                  <ECS.Component name="transform">
+                    <PerspectiveCamera position={[0, 0, 10]} makeDefault />
+                  </ECS.Component>
+                </ECS.Entity>
 
-              {/* Game entities */}
-              <Player />
-              <Terrains />
+                {/* Game entities */}
+                <Player />
+                <Terrains />
 
-              <Systems />
+                <Systems />
+                {/* <Debug /> */}
+              </Physics>
             </Suspense>
           </RC.RenderPipeline>
         </StrictMode>

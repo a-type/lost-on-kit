@@ -2,7 +2,8 @@ import { World, With, Bucket } from "miniplex";
 import createReactAPI from "miniplex/react";
 import { ReactNode } from "react";
 import { Object3D } from "three";
-import { PhysicsData } from "./systems/PhysicsSystem";
+import { RapierRigidBody as RigidBody } from "@react-three/rapier";
+import type { KinematicCharacterController } from "@dimforge/rapier3d-compat";
 
 export const PhysicsLayers = {
   Player: 1,
@@ -29,18 +30,21 @@ export type Entity = {
   spatialHashing?: true;
   neighbors?: Entity[];
 
-  physics?: PhysicsData;
+  rigidBody?: RigidBody;
+  characterController?: KinematicCharacterController;
 
   render?: ReactNode;
+
+  initialPosition?: [number, number, number];
 };
 
-export type Player = With<Entity, "isPlayer" | "transform" | "physics">;
+export type Player = With<Entity, "isPlayer" | "rigidBody">;
 
 export type Camera = With<Entity, "isCamera" | "transform">;
 
-export type Terrain = With<Entity, "isTerrain" | "transform" | "physics">;
+export type Terrain = With<Entity, "isTerrain" | "rigidBody">;
 
-export type PhysicsEntity = With<Entity, "transform" | "physics">;
+export type PhysicsEntity = With<Entity, "rigidBody">;
 
 const world = new World<Entity>();
 
@@ -51,5 +55,5 @@ function isTerrain(entity: Entity): entity is Terrain {
 }
 
 export const archetypes = {
-  terrains: world.with("isTerrain"),
+  // terrains: world.with(["isTerrain", "initialPosition"]),
 };
