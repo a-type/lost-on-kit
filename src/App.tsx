@@ -8,6 +8,7 @@ import { StrictMode, Suspense } from "react";
 import * as RC from "render-composer";
 import { Player } from "./entities/Player";
 import { Terrains } from "./entities/Terrains";
+import { PixelationEffect } from "./lib/PixelationEffect";
 import { ECS } from "./state";
 import { Systems } from "./Systems";
 
@@ -19,10 +20,11 @@ function App() {
         <StrictMode>
           <RC.RenderPipeline>
             <RC.EffectPass>
-              <RC.SMAAEffect />
+              {/* <RC.SMAAEffect /> */}
               <RC.SelectiveBloomEffect intensity={3} />
-              <RC.TiltShiftEffect focusArea={1} kernelSize={2} feather={10} />
+              <RC.TiltShiftEffect focusArea={2.5} kernelSize={2} feather={10} />
               {/* <RC.VignetteEffect /> */}
+              <PixelationEffect granularity={2} />
             </RC.EffectPass>
 
             <color args={["#223"]} attach="background" />
