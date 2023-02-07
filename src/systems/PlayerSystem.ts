@@ -49,12 +49,17 @@ export const PlayerSystem = () => {
     };
 
     if (input.x !== 0 || input.y !== 0) {
-      tmpInputVec.set(input.x, -input.y, -gravity);
+      tmpInputVec.set(input.x, -input.y, 0);
     } else {
-      tmpInputVec.set(0, 0, -gravity);
+      tmpInputVec.set(0, 0, 0);
     }
 
     tmpVelocity.copy(vec3(rigidBody.linvel()));
+    const grounded = controller.computedGrounded();
+    if (!grounded) {
+      // TODO: real gravity
+      tmpInputVec.z = -gravity;
+    }
 
     controller.computeColliderMovement(collider, tmpInputVec);
 

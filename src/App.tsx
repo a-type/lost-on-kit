@@ -12,6 +12,7 @@ import { PixelationEffect } from "./lib/PixelationEffect";
 import { ECS } from "./state";
 import { Systems } from "./Systems";
 import { Debug, Physics } from "@react-three/rapier";
+import { Terrain } from "./entities/Terrain";
 
 function App() {
   return (
@@ -21,10 +22,8 @@ function App() {
         <StrictMode>
           <RC.RenderPipeline>
             <RC.EffectPass>
-              {/* <RC.SMAAEffect /> */}
-              <RC.SelectiveBloomEffect intensity={3} />
-              <RC.TiltShiftEffect focusArea={2.5} kernelSize={2} feather={10} />
-              {/* <RC.VignetteEffect /> */}
+              {/* <RC.SelectiveBloomEffect intensity={3} /> */}
+              {/* <RC.TiltShiftEffect focusArea={2.5} kernelSize={2} feather={10} /> */}
               <PixelationEffect granularity={2} />
             </RC.EffectPass>
 
@@ -34,8 +33,8 @@ function App() {
               <Physics gravity={[0, 0, 0]}>
                 <Environment preset="sunset" />
 
-                <ambientLight intensity={0.5} />
-                <directionalLight position={[0, 0, 1]} intensity={1.5} />
+                <ambientLight intensity={0.25} />
+                <directionalLight position={[0, 0, 10]} intensity={0.5} />
 
                 {/* Main camera */}
                 <ECS.Entity>
@@ -47,10 +46,11 @@ function App() {
 
                 {/* Game entities */}
                 <Player />
-                <Terrains />
+                {/* <Terrains /> */}
+                <Terrain />
 
                 <Systems />
-                {/* <Debug /> */}
+                <Debug />
               </Physics>
             </Suspense>
           </RC.RenderPipeline>

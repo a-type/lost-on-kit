@@ -21,7 +21,7 @@ export function Player() {
     });
 
     characterController.enableAutostep(
-      0.7, // max slope angle
+      (Math.PI / 2) * 1.01, // max slope angle
       // min width
       0.3,
       true // enable dynamic bodies

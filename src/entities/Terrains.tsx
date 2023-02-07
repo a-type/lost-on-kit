@@ -1,21 +1,19 @@
 import { Box } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
-import { useEffect, useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, useMemo } from "react";
+import { generateMap } from "../lib/map/generateMap";
 import { archetypes, ECS, Terrain } from "../state";
 
 const terrains = ECS.world.with("isTerrain", "initialPosition");
 
 export const Terrains = () => {
+  const map = useMemo(() => generateMap(20), []);
+
   useEffect(() => {
-    const size = 20;
-    for (let x = 0; x < size; x++) {
-      for (let y = 0; y < size; y++) {
+    for (let x = 0; x < map.length; x++) {
+      for (let y = 0; y < map[0].length; y++) {
         spawnTerrain({
-          position: [
-            Math.floor(x - size / 2),
-            Math.floor(y - size / 2),
-            Math.random() < 0.1 ? -4 : -5,
-          ],
+          position: [x, y, map[x][y] - 5],
         });
       }
     }
@@ -38,7 +36,7 @@ export const Terrains = () => {
             includeInvisible
           >
             <Box>
-              <meshStandardMaterial color="brown" />
+              <meshStandardMaterial color="#ffb663" />
             </Box>
           </RigidBody>
         </ECS.Component>
