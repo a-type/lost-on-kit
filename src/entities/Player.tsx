@@ -11,7 +11,7 @@ export function Player() {
   useEffect(() => {
     const world = rapier.world.raw();
 
-    const characterController = world.createCharacterController(0.1);
+    const characterController = world.createCharacterController(0.01);
 
     // TODO: do I really want Z to be up?
     characterController.setUp({
@@ -26,7 +26,7 @@ export function Player() {
       0.3,
       true // enable dynamic bodies
     );
-    characterController.enableSnapToGround(0.1);
+    characterController.enableSnapToGround(0.01);
     characterController.setApplyImpulsesToDynamicBodies(true);
 
     setController(characterController);
@@ -44,8 +44,8 @@ export function Player() {
       <ECS.Component name="characterController" data={controller} />
       <ECS.Component name="rigidBody">
         <RigidBody type="kinematicPosition" colliders="ball">
-          <Sphere args={[0.333]}>
-            <meshStandardMaterial color="hotpink" attach="material" />
+          <Sphere castShadow receiveShadow args={[0.333]}>
+            <meshPhongMaterial color="hotpink" attach="material" />
           </Sphere>
         </RigidBody>
       </ECS.Component>

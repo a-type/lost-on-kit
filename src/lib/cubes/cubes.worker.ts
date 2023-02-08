@@ -32,10 +32,21 @@ function copyMapToField(field: Float32Array, size: number, map: boolean[][][]) {
   let py = 0;
   let pz = 0;
 
+  const mapScale = map.length / size;
+  function getFromMap(x: number, y: number, z: number) {
+    return (
+      map[Math.floor(x * mapScale)]?.[Math.floor(y * mapScale)]?.[
+        Math.floor(z * mapScale)
+      ] ?? false
+    );
+  }
+
   for (px = 0; px < size; px++) {
     for (py = 0; py < size; py++) {
       for (pz = 0; pz < size; pz++) {
-        field[px + py * size + pz * size * size] = map[px][py][pz] ? 1 : 0;
+        field[px + py * size + pz * size * size] = getFromMap(px, py, pz)
+          ? 0.5
+          : 0;
       }
     }
   }

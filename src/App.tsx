@@ -1,6 +1,7 @@
 import {
   Environment,
   Loader,
+  OrbitControls,
   OrthographicCamera,
   PerspectiveCamera,
 } from "@react-three/drei";
@@ -13,6 +14,7 @@ import { ECS } from "./state";
 import { Systems } from "./Systems";
 import { Debug, Physics } from "@react-three/rapier";
 import { Terrain } from "./entities/Terrain";
+import { Tools } from "./entities/Tools";
 
 function App() {
   return (
@@ -30,7 +32,7 @@ function App() {
             <color args={["#223"]} attach="background" />
 
             <Suspense>
-              <Physics gravity={[0, 0, 0]}>
+              <Physics gravity={[0, 0, -5]}>
                 <Environment preset="sunset" />
 
                 <ambientLight intensity={0.25} />
@@ -46,11 +48,13 @@ function App() {
 
                 {/* Game entities */}
                 <Player />
-                {/* <Terrains /> */}
                 <Terrain />
+                <Tools />
 
                 <Systems />
-                <Debug />
+                {/* <Debug /> */}
+
+                {/* <OrbitControls /> */}
               </Physics>
             </Suspense>
           </RC.RenderPipeline>

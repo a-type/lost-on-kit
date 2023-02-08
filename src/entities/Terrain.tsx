@@ -19,17 +19,19 @@ export function Terrain({}: TerrainProps) {
   const [geometry, setGeometry] = useState<BufferGeometry>();
 
   useEffect(() => {
-    generateVoxelGeometries({ resolution: size, map }).then(({ geometry }) => {
-      console.log("Terrain worker finished");
-      setGeometry(geometry);
-    });
+    generateVoxelGeometries({ resolution: size * 2 + 1, map }).then(
+      ({ geometry }) => {
+        console.log("Terrain worker finished");
+        setGeometry(geometry);
+      }
+    );
   }, [map]);
 
   if (!geometry) return null;
 
   return (
-    <RigidBody colliders="trimesh" type="fixed" position={[0, 0, -10]}>
-      <mesh geometry={geometry} scale={size}>
+    <RigidBody colliders="trimesh" type="fixed" position={[0.5, 0.5, -10.5]}>
+      <mesh receiveShadow geometry={geometry} scale={size}>
         <meshPhongMaterial color={new Color("green")} />
       </mesh>
     </RigidBody>

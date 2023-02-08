@@ -4,10 +4,10 @@ import { ReactNode } from "react";
 import { Object3D } from "three";
 import { RapierRigidBody as RigidBody } from "@react-three/rapier";
 import type { KinematicCharacterController } from "@dimforge/rapier3d-compat";
+import { ToolData } from "./lib/tools/data";
 
 export const PhysicsLayers = {
   Player: 1,
-  Terrain: 2,
 };
 
 export const UpdatePriority = {
@@ -19,7 +19,6 @@ export const UpdatePriority = {
 
 export type Entity = {
   isPlayer?: true;
-  isTerrain?: true;
   isCamera?: true;
 
   transform?: Object3D;
@@ -33,27 +32,22 @@ export type Entity = {
   rigidBody?: RigidBody;
   characterController?: KinematicCharacterController;
 
-  render?: ReactNode;
-
+  tool?: ToolData;
   initialPosition?: [number, number, number];
+
+  render?: ReactNode;
 };
 
 export type Player = With<Entity, "isPlayer" | "rigidBody">;
 
 export type Camera = With<Entity, "isCamera" | "transform">;
 
-export type Terrain = With<Entity, "isTerrain" | "rigidBody">;
-
 export type PhysicsEntity = With<Entity, "rigidBody">;
+
+export type Tool = With<Entity, "tool" | "rigidBody">;
 
 const world = new World<Entity>();
 
 export const ECS = createReactAPI(world);
 
-function isTerrain(entity: Entity): entity is Terrain {
-  return entity.isTerrain === true;
-}
-
-export const archetypes = {
-  // terrains: world.with(["isTerrain", "initialPosition"]),
-};
+export const archetypes = {};
