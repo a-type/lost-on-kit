@@ -96,7 +96,6 @@ export const PlayerSystem = () => {
 
     tmpInputVec.setZ(jumpVelocity * dt);
 
-    console.log(jumpVelocity, tmpInputVec);
     controller.computeColliderMovement(collider, tmpInputVec);
 
     tmpTranslation.copy(vec3(rigidBody.translation()));

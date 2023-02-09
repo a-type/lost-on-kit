@@ -45,7 +45,7 @@ export function Player() {
       <ECS.Component name="rigidBody">
         <RigidBody type="kinematicPosition" colliders="ball">
           <Sphere castShadow receiveShadow args={[0.333]}>
-            <meshPhongMaterial color="hotpink" attach="material" />
+            <meshStandardMaterial color="hotpink" attach="material" />
           </Sphere>
         </RigidBody>
       </ECS.Component>
