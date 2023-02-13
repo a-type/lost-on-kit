@@ -1,9 +1,9 @@
-import { perlin3 } from "../noise/perlin";
+import { perlin3, perlin2 } from "../noise/perlin";
 import cubesValues from "./cubesValues";
 import { TerrainWorkerData, CloudWorkerResult } from "./types";
 
 // demo: perlin noise
-function fillFieldWithPerlin(field: Float32Array, size: number) {
+function fillFieldWithPerlin3(field: Float32Array, size: number) {
   let px = 0;
   let py = 0;
   let pz = 0;
@@ -11,7 +11,7 @@ function fillFieldWithPerlin(field: Float32Array, size: number) {
   for (px = 0; px < size; px++) {
     for (py = 0; py < size; py++) {
       for (pz = 0; pz < size; pz++) {
-        field[px + py * size + pz * size * size] = density([px, py, pz], size);
+        field[px + py * size + pz * size * size] = density3([px, py, pz], size);
       }
     }
   }
@@ -19,12 +19,41 @@ function fillFieldWithPerlin(field: Float32Array, size: number) {
 
 const perlinStepSize = 1;
 
-const density = ([px, py, pz]: [number, number, number], sz: number) => {
+const density3 = ([px, py, pz]: [number, number, number], sz: number) => {
   const m = perlinStepSize / (sz / 2);
   const x = px * m;
   const y = py * m;
   const z = pz * m;
   return perlin3(x * 2 + 5, y * 2 + 3, z * 2 + 0.5);
+};
+
+function fillFieldWithPerlin2(
+  field: Float32Array,
+  size: number,
+  offset: [number, number, number]
+) {
+  let px = 0;
+  let py = 0;
+  let pz = 0;
+
+  for (px = 0; px < size; px++) {
+    for (py = 0; py < size; py++) {
+      for (pz = 0; pz < size; pz++) {
+        field[px + py * size + pz * size * size] = density2(
+          [px + offset[0] * size, py + offset[1] * size, pz + offset[2] * size],
+          size
+        );
+      }
+    }
+  }
+}
+
+const density2 = ([px, py, pz]: [number, number, number], sz: number) => {
+  const m = perlinStepSize / (sz / 2);
+  const x = px * m;
+  const y = py * m;
+  const z = pz * m;
+  return perlin2(x * 2 + 5, y * 2 + 3) > z * 2 + 0.5 ? 1 : 0;
 };
 
 function copyMapToField(field: Float32Array, size: number, map: boolean[][][]) {
@@ -34,18 +63,16 @@ function copyMapToField(field: Float32Array, size: number, map: boolean[][][]) {
 
   const mapScale = map.length / size;
   function getFromMap(x: number, y: number, z: number) {
-    return (
-      map[Math.floor(x * mapScale)]?.[Math.floor(y * mapScale)]?.[
-        Math.floor(z * mapScale)
-      ] ?? false
-    );
+    return map[Math.floor(x * mapScale)][Math.floor(y * mapScale)][
+      Math.floor(z * mapScale)
+    ];
   }
 
   for (px = 0; px < size; px++) {
     for (py = 0; py < size; py++) {
       for (pz = 0; pz < size; pz++) {
         field[px + py * size + pz * size * size] = getFromMap(px, py, pz)
-          ? 0.5
+          ? 1
           : 0;
       }
     }
@@ -68,7 +95,7 @@ context.addEventListener("message", function (ev) {
   const colorList = new Float32Array(12 * 3);
 
   const enableUvs = false;
-  const enableColors = false;
+  const enableColors = !!data.color;
 
   const size = data.resolution;
   const size2 = size * size;
@@ -83,6 +110,15 @@ context.addEventListener("message", function (ev) {
   const field = new Float32Array(size3); // voxels
   const normalCache = new Float32Array(size3 * 3); // vectors
   const palette = new Float32Array(size3 * 3); // colors
+  if (enableColors) {
+    console.log(data.color);
+    // fill palette with color
+    for (let i = 0; i < size3; i++) {
+      palette[i * 3 + 0] = data.color[0];
+      palette[i * 3 + 1] = data.color[1];
+      palette[i * 3 + 2] = data.color[2];
+    }
+  }
 
   const maxCount = size3 * 3;
   let count = 0;
@@ -567,17 +603,16 @@ context.addEventListener("message", function (ev) {
   }
 
   function generate(data: TerrainWorkerData) {
-    // fillFieldWithPerlin(field, size);
+    // fillFieldWithPerlin2(field, size - 1, data.position);
     copyMapToField(field, size, data.map);
-    blur();
+    // blur();
 
-    // starting at -1 closes up the bottom of the mesh!
-    const startValue = 1;
+    const startValue = 2;
     const endValue = size - 2;
     for (let z = startValue; z < endValue; z++) {
       const zOffset = size2 * z;
       const fz = (z - halfSize) / halfSize;
-      for (let y = startValue - 2; y < endValue; y++) {
+      for (let y = startValue; y < endValue; y++) {
         const yOffset = zOffset + size * y;
         const fy = (y - halfSize) / halfSize;
         for (let x = startValue; x < endValue; x++) {

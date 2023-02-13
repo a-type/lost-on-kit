@@ -21,12 +21,12 @@ export function Player() {
     });
 
     characterController.enableAutostep(
-      (Math.PI / 2) * 1.01, // max slope angle
+      Math.PI, // max slope angle
       // min width
-      0.3,
+      0.05,
       true // enable dynamic bodies
     );
-    characterController.enableSnapToGround(0.01);
+    characterController.enableSnapToGround(0.05);
     characterController.setApplyImpulsesToDynamicBodies(true);
 
     setController(characterController);

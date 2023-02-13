@@ -22,15 +22,6 @@ export type CloudWorkerResult = {
 export type TerrainWorkerData = {
   resolution: number;
   map: boolean[][][];
-};
-
-export type LandWorkerData = {
-  resolution: number;
-  noiseSize: number;
-  groundColor1: string;
-  groundColor2: string;
-};
-
-export type LandWorkerResult = {
-  textureData: Uint8Array;
+  color: [number, number, number];
+  position: [number, number, number];
 };

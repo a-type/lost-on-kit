@@ -3,26 +3,8 @@ import { useCallback, useRef } from "react";
 import { DirectionalLight } from "three";
 import { ECS } from "../state";
 
-const cameras = ECS.world.with("isCamera", "transform");
-
 export const DirectionalLightFollowSystem = () => {
   const lightRef = useRef<DirectionalLight | null>(null);
-
-  useFrame(() => {
-    const [camera] = cameras;
-    if (lightRef.current && camera) {
-      // lightRef.current.position.set(
-      //   camera.transform.position.x,
-      //   camera.transform.position.y,
-      //   10
-      // );
-      // lightRef.current.lookAt(
-      //   camera.transform.position.x,
-      //   camera.transform.position.y,
-      //   0
-      // );
-    }
-  });
 
   const onUpdate = useCallback((self: DirectionalLight) => {
     self.shadow.mapSize.width = 2048;

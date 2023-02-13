@@ -12,6 +12,7 @@ specifiers:
   '@types/three': ^0.144.0
   '@vitejs/plugin-react': ^3.1.0
   '@vitejs/plugin-react-swc': ^3.0.0
+  marching-cubes-fast: ^0.0.17
   material-composer: ^0.2.6
   material-composer-r3f: ^0.2.5
   miniplex: ^2.0.0-beta.3
@@ -21,6 +22,7 @@ specifiers:
   render-composer: ^0.2.8
   shader-composer: ^0.4.7
   shader-composer-toybox: ^0.1.3
+  simplex-noise: ^4.0.1
   three: ^0.145.0
   three-stdlib: ^2.17.3
   typescript: ^4.9.3
@@ -36,6 +38,7 @@ dependencies:
   '@react-three/fiber': 8.10.4_ee34sidbpuk5ebd4phepfgxxdi
   '@react-three/rapier': 0.13.2_w4wghqa6qnbuhawi2ygy4s5dw4
   '@types/three': 0.144.0
+  marching-cubes-fast: 0.0.17
   material-composer: 0.2.6_three@0.145.0
   material-composer-r3f: 0.2.5_evvpzfhtejwckrhxe4b5umyn44
   miniplex: 2.0.0-next.20_react@18.2.0
@@ -45,6 +48,7 @@ dependencies:
   render-composer: 0.2.8_tjc4hjat6q72q5j7kanllf3wme
   shader-composer: 0.4.9_three@0.145.0
   shader-composer-toybox: 0.1.3_three@0.145.0
+  simplex-noise: 4.0.1
   three: 0.145.0
   three-stdlib: 2.21.8_three@0.145.0
   vfx-composer: 0.4.0_three@0.145.0
@@ -1568,6 +1572,10 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
+  /marching-cubes-fast/0.0.17:
+    resolution: {integrity: sha512-HVxwEKIySl4ypPpkSSdl1tkmUhCY4B5a7hLuzth/4u+wMwimpEiYEFmkLcUC6W08ythmcNDpFNAw7ByNSfDEqA==}
+    dev: false
+
   /material-composer-r3f/0.2.5_evvpzfhtejwckrhxe4b5umyn44:
     resolution: {integrity: sha512-sdbfLEHfNRenySsBZlmETWJTqNfSgaaoDepJmdMrEhYUPz4n6CWE+IffxNiX2d7i3gn8P42AeHTXQGrlDFvsWg==}
     peerDependencies:
@@ -1928,6 +1936,10 @@ packages:
       call-bind: 1.0.2
       get-intrinsic: 1.2.0
       object-inspect: 1.12.3
+    dev: false
+
+  /simplex-noise/4.0.1:
+    resolution: {integrity: sha512-zl/+bdSqW7HJOQ0oDbxrNYaF4F5ik0i7M6YOYmEoIJNtg16NpvWaTTM1Y7oV/7T0jFljawLgYPS81Uu2rsfo1A==}
     dev: false
 
   /source-map-js/1.0.2:

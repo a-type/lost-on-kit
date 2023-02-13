@@ -12,13 +12,19 @@ function concatenate(a: Float32Array, b: Float32Array, length: number) {
 export const generateVoxelGeometries = ({
   resolution,
   map,
+  color,
+  position,
 }: {
   resolution: number;
   map: boolean[][][];
+  color: [number, number, number];
+  position: [number, number, number];
 }) => {
   const chunkData: TerrainWorkerData = {
     resolution,
     map,
+    color,
+    position,
   };
 
   const worker = new Worker(new URL("./cubes.worker.ts", import.meta.url), {

@@ -1,5 +1,7 @@
 import {
+  CameraControls,
   Environment,
+  FlyControls,
   Loader,
   OrbitControls,
   OrthographicCamera,
@@ -39,7 +41,7 @@ function App() {
               <ECS.Entity>
                 <ECS.Component name="isCamera" data={true} />
                 <ECS.Component name="transform">
-                  <PerspectiveCamera makeDefault />
+                  <PerspectiveCamera makeDefault position={[0, -5, 10]} />
                 </ECS.Component>
               </ECS.Entity>
 
@@ -49,8 +51,7 @@ function App() {
               <Tools />
 
               <Systems />
-              {/* <Debug /> */}
-
+              <Debug />
               {/* <OrbitControls /> */}
             </Physics>
           </Suspense>

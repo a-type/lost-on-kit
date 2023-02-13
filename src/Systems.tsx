@@ -6,12 +6,12 @@ import { PickingSystem } from "./systems/PickingSystem";
 import { PlayerSystem } from "./systems/PlayerSystem";
 import { SpatialHashingSystem } from "./systems/SpatialHashingSystem";
 
-export const Systems = () => (
+export const Systems = ({ camera = true }: { camera?: boolean }) => (
   <>
     <SpatialHashingSystem />
     <FindNeighborsSystem />
     <PlayerSystem />
-    <CameraRigSystem offset={new Vector3(0, -5, 15)} />
+    {camera && <CameraRigSystem offset={new Vector3(0, -5, 15)} />}
     <PickingSystem />
     <DirectionalLightFollowSystem />
   </>
