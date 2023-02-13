@@ -17,7 +17,7 @@ export interface TerrainProps {}
 
 const terrains = ECS.world.with("terrainChunk");
 
-const RENDER_OFFSETS = [0.5, 0.5, -10.5];
+const RENDER_OFFSETS = [0.5, 0.5, -16.5];
 
 const density3 = (px: number, py: number, pz: number) => {
   const m = 1 / (CHUNK_SIZE / 2);
@@ -86,9 +86,9 @@ function TerrainChunk({ entity }: { entity: Chunk }) {
   if (!geometry) return null;
 
   const position: [number, number, number] = [
-    entity.terrainChunk.x * CHUNK_SIZE,
-    entity.terrainChunk.y * CHUNK_SIZE,
-    entity.terrainChunk.z * CHUNK_SIZE - 16,
+    entity.terrainChunk.x * CHUNK_SIZE + RENDER_OFFSETS[0],
+    entity.terrainChunk.y * CHUNK_SIZE + RENDER_OFFSETS[1],
+    entity.terrainChunk.z * CHUNK_SIZE + RENDER_OFFSETS[2],
   ];
 
   return (
@@ -100,7 +100,14 @@ function TerrainChunk({ entity }: { entity: Chunk }) {
           position={position}
           // rotation={new Euler(0, Math.PI, -Math.PI)}
         >
-          <mesh receiveShadow geometry={geometry} scale={CHUNK_SIZE}>
+          <mesh
+            userData={{
+              isTerrain: true,
+            }}
+            receiveShadow
+            geometry={geometry}
+            scale={CHUNK_SIZE}
+          >
             <meshStandardMaterial color={0xec6d40} />
           </mesh>
         </RigidBody>

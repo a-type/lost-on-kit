@@ -26,7 +26,7 @@ function App() {
           <RC.EffectPass>
             {/* <RC.SelectiveBloomEffect intensity={3} /> */}
             {/* <RC.TiltShiftEffect focusArea={2.5} kernelSize={2} feather={10} /> */}
-            <PixelationEffect granularity={2} />
+            <PixelationEffect granularity={4} />
           </RC.EffectPass>
 
           <color args={["#223"]} attach="background" />

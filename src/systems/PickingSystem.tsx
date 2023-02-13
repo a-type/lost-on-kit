@@ -18,16 +18,21 @@ export const PickingSystem = () => {
     tmpIntersects.length = 0;
     state.raycaster.intersectObjects(state.scene.children, true, tmpIntersects);
     if (tmpIntersects.length > 0) {
+      let index = 0;
       let intersection = tmpIntersects[0];
-      if (intersection.object === cursorRef.current) {
-        intersection = tmpIntersects[1];
+      while (
+        intersection &&
+        (!intersection.object.userData?.isTerrain ||
+          intersection.object === cursorRef.current)
+      ) {
+        intersection = tmpIntersects[++index];
       }
       if (intersection) {
         // move cursor to the position, snapped to grid, Z + 1
         tmpPoint.copy(intersection.point);
         tmpPoint.x = Math.round(tmpPoint.x);
         tmpPoint.y = Math.round(tmpPoint.y);
-        tmpPoint.z = Math.round(tmpPoint.z) + 1;
+        tmpPoint.z = Math.round(tmpPoint.z) + 0.5;
         cursorRef.current?.position.copy(tmpPoint);
       }
     }

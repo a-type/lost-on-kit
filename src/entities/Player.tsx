@@ -3,6 +3,10 @@ import { RigidBody, useRapier } from "@react-three/rapier";
 import { useEffect, useState } from "react";
 import { ECS } from "../state";
 
+function degToRad(deg: number) {
+  return deg * (Math.PI / 180);
+}
+
 export function Player() {
   const rapier = useRapier();
 
@@ -11,7 +15,7 @@ export function Player() {
   useEffect(() => {
     const world = rapier.world.raw();
 
-    const characterController = world.createCharacterController(0.01);
+    const characterController = world.createCharacterController(0.1);
 
     // TODO: do I really want Z to be up?
     characterController.setUp({
@@ -21,12 +25,14 @@ export function Player() {
     });
 
     characterController.enableAutostep(
-      Math.PI, // max slope angle
-      // min width
-      0.05,
+      0.5,
+      0.2,
       true // enable dynamic bodies
     );
-    characterController.enableSnapToGround(0.05);
+    characterController.setMaxSlopeClimbAngle(degToRad(60));
+    characterController.setMinSlopeSlideAngle(degToRad(20));
+    characterController.setSlideEnabled(true);
+    characterController.enableSnapToGround(0.5);
     characterController.setApplyImpulsesToDynamicBodies(true);
 
     setController(characterController);
