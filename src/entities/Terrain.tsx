@@ -23,18 +23,9 @@ import { terrainNoise } from "../lib/map/terrainNoise";
 
 export interface TerrainProps {}
 
-const terrains = ECS.world.with("terrainChunk");
+const terrains = ECS.world.with("terrainChunk", "chunkRevealed");
 
 const RENDER_OFFSETS = [0.5, 0.5, -16.5];
-
-const density3 = (px: number, py: number, pz: number) => {
-  const m = 1 / (CHUNK_SIZE / 2);
-  const x = px * m;
-  const y = py * m;
-  const z = pz * m;
-  return perlin3(x * 2 + 5, y * 2 + 3, z * 2 + 0.5);
-};
-const colors: { [key: string]: [number, number, number] } = {};
 
 export function Terrain({}: TerrainProps) {
   return (
@@ -48,44 +39,14 @@ function TerrainChunk({ entity }: { entity: Chunk }) {
   const map = useConst(
     () =>
       new MarchingCubesChunks2({
-        // getCell: () => (Math.random() > 0.5 ? 1 : 0),
-        // getCell: density3,
-        // getCell: (x, y, z) => Math.random() * 2 - 1,
-        // getCell: (x, y, z) => (z === 0 ? -1 : Math.random() < 0.1 ? -1 : 1),
-        // getCell: (x, y, z) => (z === 0 ? -1 : 1),
-        // getCell: (x, y, z) => {
-        //   if (z === 0) return -1;
-        //   if (z === 1) {
-        //     if (x % 4 === 0 || x + (1 % 4) === 0) return -1;
-        //     return 1;
-        //   }
-        //   return 1;
-        // },
         getCell: terrainNoise,
         chunkSize: CHUNK_SIZE,
-        // getCellColor: (x, y, z) => {
-        //   const cx = Math.floor(x / CHUNK_SIZE);
-        //   const cy = Math.floor(y / CHUNK_SIZE);
-        //   const cz = Math.floor(z / CHUNK_SIZE);
-        //   const i = `${cx},${cy},${cz}`;
-        //   if (!colors[i]) {
-        //     colors[i] = [Math.random(), Math.random(), Math.random()];
-        //   }
-        //   // console.log(colors);
-        //   return colors[i];
-        // },
-        // getCellColor: (x, y, z) => {
-        //   if (x % 4 === 0) {
-        //     return [0, 0, 0];
-        //   }
-        //   return [1, 1, 1];
-        // },
       })
   );
   (window as any).map = map;
   const geometry = useMarchingCubesGeometry(map, entity);
 
-  const color = useMemo(() => {
+  const debugColor = useMemo(() => {
     const c = new Color();
     c.setHSL(Math.random(), 1, 0.5);
     return c;

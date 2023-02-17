@@ -24,6 +24,7 @@ export function Player() {
   return (
     <ECS.Entity>
       <ECS.Component name="isPlayer" data={true} />
+      <ECS.Component name="chunkRevealer" data={true} />
       <ECS.Component name="characterController" data={controller} />
       <ECS.Component name="rigidBody">
         <RigidBody

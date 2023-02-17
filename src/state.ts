@@ -30,8 +30,9 @@ export const UpdatePriority = {
   Render: 200,
 } as const;
 
-export const CHUNK_SIZE = 6;
-export const MAP_SIZE = 4;
+export const CHUNK_SIZE = 8;
+export const MAP_SIZE = 128;
+export const MAP_HEIGHT = 4;
 
 export type Entity = {
   isPlayer?: true;
@@ -53,6 +54,7 @@ export type Entity = {
     y: number;
     z: number;
   };
+  chunkRevealed?: boolean;
 
   tool?: ToolData;
   toolState?: {
@@ -70,6 +72,8 @@ export type Entity = {
   wireSegments?: RefObject<RigidBody>[];
 
   render?: ReactNode;
+
+  chunkRevealer?: boolean;
 };
 
 export type Player = With<Entity, "isPlayer" | "rigidBody">;
@@ -88,9 +92,10 @@ export const ECS = createReactAPI(world);
 
 export const archetypes = {};
 
-for (let x = 0; x < MAP_SIZE; x += 1) {
-  for (let y = 0; y < MAP_SIZE; y += 1) {
-    for (let z = 0; z < MAP_SIZE; z += 1) {
+const halfMapSize = MAP_SIZE / 2;
+for (let x = -halfMapSize; x < halfMapSize; x += 1) {
+  for (let y = -halfMapSize; y < halfMapSize; y += 1) {
+    for (let z = -1; z < MAP_HEIGHT; z += 1) {
       // const z = 0;
       // entities.push(
       ECS.world.add({

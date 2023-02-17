@@ -22,6 +22,7 @@ const timeToJumpApex = 1;
 const maxJumpHeight = 4;
 const minJumpHeight = 1;
 const jumpGravity = -(2 * maxJumpHeight) / (timeToJumpApex * timeToJumpApex);
+// const jumpGravity = 0;
 const maxJumpVelocity = Math.abs(jumpGravity) * timeToJumpApex;
 const minJumpVelocity = Math.sqrt(2 * Math.abs(jumpGravity) * minJumpHeight);
 

@@ -60,7 +60,7 @@ function Wire({ ent }: { ent: WireEnt }) {
           <WireSegment
             key={i}
             ref={ref}
-            position={[start.x, start.y, start.z + i * 0.15]}
+            position={[start.x, start.y, start.z + i * 0.5]}
           />
         );
       })}
@@ -96,7 +96,7 @@ const WireSegment = forwardRef<
       ref={ref}
       includeInvisible
     >
-      <Sphere args={[0.05]}>
+      <Sphere args={[0.25]} visible={false}>
         <meshBasicMaterial color="black" attach="material" />
       </Sphere>
     </RigidBody>
