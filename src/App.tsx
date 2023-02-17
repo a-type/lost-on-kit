@@ -16,6 +16,7 @@ import { Systems } from "./Systems";
 import { Debug, Physics } from "@react-three/rapier";
 import { Terrain } from "./entities/Terrain";
 import { Tools } from "./entities/Tools";
+import { Wires } from "./entities/Wires";
 
 function App() {
   return (
@@ -49,9 +50,10 @@ function App() {
               <Player />
               <Terrain />
               <Tools />
+              <Wires />
 
               <Systems />
-              <Debug />
+              {/* <Debug /> */}
               {/* <OrbitControls /> */}
             </Physics>
           </Suspense>

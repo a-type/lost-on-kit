@@ -50,6 +50,10 @@ export const PickingSystem = () => {
       tool: {
         type: "solar-panel",
       },
+      toolState: {
+        falling: false,
+        fallTime: 0,
+      },
     });
   };
 

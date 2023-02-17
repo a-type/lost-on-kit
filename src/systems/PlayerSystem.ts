@@ -2,8 +2,9 @@ import { useFrame } from "@react-three/fiber";
 import { vec3 } from "@react-three/rapier";
 import { hasComponents } from "miniplex";
 import { Vector3 } from "three";
-import { ECS, Entity, Player } from "../state";
+import { ECS, Entity, PhysicsCollision, PhysicsGroup, Player } from "../state";
 import { useKeyboard } from "../util/useKeyboard";
+import { QueryFilterFlags } from "@dimforge/rapier3d-compat";
 
 function isPlayer(entity: Entity): entity is Player {
   return hasComponents(entity, "isPlayer");
@@ -96,7 +97,19 @@ export const PlayerSystem = () => {
 
     tmpInputVec.setZ(jumpVelocity * dt);
 
-    controller.computeColliderMovement(collider, tmpInputVec);
+    let matches = 0;
+    controller.computeColliderMovement(
+      collider,
+      tmpInputVec,
+      PhysicsCollision.Wire & PhysicsGroup.Wire
+      // (collider) => {
+      //   const match = (collider.parent()?.userData as any).type === "wire";
+      //   matches++;
+      //   return match;
+      // }
+    );
+
+    // console.log("Ignoring", matches, "colliders");
 
     tmpTranslation.copy(vec3(rigidBody.translation()));
     tmpMovement.copy(vec3(controller.computedMovement()));

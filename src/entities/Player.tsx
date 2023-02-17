@@ -1,46 +1,23 @@
 import { Sphere } from "@react-three/drei";
 import { RigidBody, useRapier } from "@react-three/rapier";
 import { useEffect, useState } from "react";
-import { ECS } from "../state";
-
-function degToRad(deg: number) {
-  return deg * (Math.PI / 180);
-}
+import { ECS, PhysicsCollision, PhysicsGroup } from "../state";
+import { useCharacterController } from "../lib/useCharacterController";
 
 export function Player() {
-  const rapier = useRapier();
-
-  const [controller, setController] = useState<any>(null);
-
-  useEffect(() => {
-    const world = rapier.world.raw();
-
-    const characterController = world.createCharacterController(0.1);
-
-    // TODO: do I really want Z to be up?
-    characterController.setUp({
-      x: 0,
-      y: 0,
-      z: 1,
-    });
-
-    characterController.enableAutostep(
-      0.5,
-      0.2,
-      true // enable dynamic bodies
-    );
-    characterController.setMaxSlopeClimbAngle(degToRad(60));
-    characterController.setMinSlopeSlideAngle(degToRad(20));
-    characterController.setSlideEnabled(true);
-    characterController.enableSnapToGround(0.5);
-    characterController.setApplyImpulsesToDynamicBodies(true);
-
-    setController(characterController);
-    return () => {
-      // characterController.free();
-      rapier.world.raw().removeCharacterController(characterController);
-    };
-  }, [rapier]);
+  const controller = useCharacterController({
+    offset: 0.1,
+    autoStep: {
+      height: 0.5,
+      minDistance: 0.2,
+      dynamic: true,
+    },
+    maxSlopeAngleDeg: 60,
+    minSlopeSlideAngleDeg: 20,
+    slideEnabled: true,
+    snapToGround: 0.5,
+    applyImpulsesToDynamicBodies: true,
+  });
 
   if (!controller) return null;
 
@@ -49,7 +26,18 @@ export function Player() {
       <ECS.Component name="isPlayer" data={true} />
       <ECS.Component name="characterController" data={controller} />
       <ECS.Component name="rigidBody">
-        <RigidBody type="kinematicPosition" colliders="ball">
+        <RigidBody
+          type="kinematicPosition"
+          colliders="ball"
+          collisionGroups={
+            PhysicsGroup.Player &
+            PhysicsCollision.Terrain &
+            PhysicsCollision.Tool
+          }
+          userData={{
+            type: "player",
+          }}
+        >
           <Sphere castShadow receiveShadow args={[0.333]}>
             <meshStandardMaterial color="hotpink" attach="material" />
           </Sphere>

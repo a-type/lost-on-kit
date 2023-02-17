@@ -1,14 +1,23 @@
 import { World, With, Bucket } from "miniplex";
 import createReactAPI from "miniplex/react";
-import { ReactNode } from "react";
+import { ReactNode, RefObject } from "react";
 import { Object3D } from "three";
 import { RapierRigidBody as RigidBody } from "@react-three/rapier";
 import type { KinematicCharacterController } from "@dimforge/rapier3d-compat";
 import { ToolData } from "./lib/tools/data";
-import { generateMap, generateTestMap } from "./lib/map/generateMap";
 
-export const PhysicsLayers = {
-  Player: 1,
+export const PhysicsCollision = {
+  Player: 0b0000_0000_0000_0001,
+  Terrain: 0b0000_0000_0000_0010,
+  Tool: 0b0000_0000_0000_0100,
+  Wire: 0b0000_0000_0000_1000,
+};
+export const PhysicsGroup = {
+  Player: 0b0000_0001_0000_0000,
+  Terrain: 0b0000_0010_0000_0000,
+  Tool: 0b0000_0100_0000_0000,
+  Wire: 0b0000_1000_0000_0000,
+  All: 0b1111_1111_0000_0000,
 };
 
 export const UpdatePriority = {
@@ -43,7 +52,19 @@ export type Entity = {
   };
 
   tool?: ToolData;
+  toolState?: {
+    falling: boolean;
+    fallTime: number;
+  };
   initialPosition?: [number, number, number];
+
+  wire?: {
+    start: RigidBody;
+    startOffset: [number, number, number];
+    end: RigidBody;
+    endOffset: [number, number, number];
+  };
+  wireSegments?: RefObject<RigidBody>[];
 
   render?: ReactNode;
 };

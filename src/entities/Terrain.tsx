@@ -4,7 +4,15 @@ import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { BufferGeometry, Color, Euler } from "three";
 import { generateVoxelGeometries } from "../lib/cubes/generateVoxelGeometries";
 import { generateMap, TerrainMap } from "../lib/map/generateMap";
-import { Chunk, ECS, CHUNK_SIZE, MAP_SIZE, Entity } from "../state";
+import {
+  Chunk,
+  ECS,
+  CHUNK_SIZE,
+  MAP_SIZE,
+  Entity,
+  PhysicsGroup,
+  PhysicsCollision,
+} from "../state";
 import { MarchingCubesChunks } from "../lib/cubes/MarchingCubesChunks";
 import { perlin3 } from "../lib/noise/perlin";
 import { toThreeGeometry } from "../lib/cubes/toThreeGeometry";
@@ -98,6 +106,12 @@ function TerrainChunk({ entity }: { entity: Chunk }) {
           colliders="trimesh"
           type="fixed"
           position={position}
+          collisionGroups={
+            PhysicsGroup.Terrain &
+            PhysicsCollision.Player &
+            PhysicsCollision.Tool &
+            PhysicsCollision.Wire
+          }
           // rotation={new Euler(0, Math.PI, -Math.PI)}
         >
           <mesh
