@@ -47,8 +47,8 @@ function Tool({ ent }: { ent: ToolEnt }) {
           mass={1000}
           position={ent.initialPosition}
           // collisionGroups={
-          //   PhysicsGroup.Tool &
-          //   PhysicsCollision.Terrain &
+          //   PhysicsGroup.Tool |
+          //   PhysicsCollision.Terrain |
           //   PhysicsCollision.Player
           // }
         >

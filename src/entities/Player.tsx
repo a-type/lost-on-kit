@@ -10,7 +10,7 @@ export function Player() {
     autoStep: {
       height: 0.5,
       minDistance: 0.2,
-      dynamic: true,
+      dynamic: false,
     },
     maxSlopeAngleDeg: 60,
     minSlopeSlideAngleDeg: 20,
@@ -30,8 +30,8 @@ export function Player() {
           type="kinematicPosition"
           colliders="ball"
           collisionGroups={
-            PhysicsGroup.Player &
-            PhysicsCollision.Terrain &
+            PhysicsGroup.Player |
+            PhysicsCollision.Terrain |
             PhysicsCollision.Tool
           }
           userData={{

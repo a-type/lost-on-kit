@@ -21,6 +21,7 @@ import {
 import { RigidBody as RapierRigidBody } from "@dimforge/rapier3d-compat";
 import {
   CubicBezierLine,
+  Line,
   QuadraticBezierLine,
   Sphere,
 } from "@react-three/drei";
@@ -59,7 +60,7 @@ function Wire({ ent }: { ent: WireEnt }) {
           <WireSegment
             key={i}
             ref={ref}
-            position={[position.x, position.y, position.z]}
+            position={[start.x, start.y, start.z + i * 0.15]}
           />
         );
       })}
@@ -76,12 +77,12 @@ function Wire({ ent }: { ent: WireEnt }) {
   );
 }
 
-const wireCollisionGroup = PhysicsGroup.Wire & PhysicsCollision.Terrain;
+const wireCollisionGroup = PhysicsGroup.Wire | PhysicsCollision.Terrain;
 
 const WireSegment = forwardRef<
   RapierRigidBody,
   {
-    position: [number, number, number];
+    position?: [number, number, number];
   }
 >(function WireSegment({ position }, ref) {
   return (
@@ -91,10 +92,11 @@ const WireSegment = forwardRef<
       type="dynamic"
       // sensor
       collisionGroups={wireCollisionGroup}
+      solverGroups={wireCollisionGroup}
       ref={ref}
       includeInvisible
     >
-      <Sphere args={[0.25]}>
+      <Sphere args={[0.05]}>
         <meshBasicMaterial color="black" attach="material" />
       </Sphere>
     </RigidBody>
@@ -143,9 +145,9 @@ const WireLink = ({
 
   useEffect(() => {
     if (prismatic.current) {
-      // prismatic.current.configureMotorVelocity(-0.5, 0.5);
+      prismatic.current.configureMotorVelocity(-10, 0.5);
       prismatic.current.configureMotorPosition(0, 0.5, 0.5);
-      prismatic.current.setContactsEnabled(true);
+      // prismatic.current.setContactsEnabled(true);
     }
   }, [prismatic]);
 
@@ -156,6 +158,7 @@ const WireLink = ({
         type="dynamic"
         includeInvisible
         collisionGroups={wireCollisionGroup}
+        solverGroups={wireCollisionGroup}
       >
         <Sphere args={[0.25]} visible={false}>
           <meshBasicMaterial color="black" attach="material" />
@@ -166,31 +169,45 @@ const WireLink = ({
         type="dynamic"
         includeInvisible
         collisionGroups={wireCollisionGroup}
+        solverGroups={wireCollisionGroup}
       >
         <Sphere args={[0.25]} visible={false}>
           <meshBasicMaterial color="black" attach="material" />
         </Sphere>
       </RigidBody>
-      <QuadraticBezierLine
-        ref={lineRef}
-        lineWidth={3}
-        color="#000000"
-        start={vec3(prev.current?.translation() || new Vector3())}
-        end={vec3(next.current?.translation() || new Vector3())}
-      />
+      <WireLine start={prev} end={next} />
     </>
   );
+};
 
-  // useSphericalJoint(
-  //   prev,
-  //   next,
-  //   [
-  //     [-1, 0, 0],
-  //     [1, 0, 0],
-  //   ]
-  // );
+const WireLine = ({
+  start,
+  end,
+}: {
+  start: MutableRefObject<RapierRigidBody | null>;
+  end: MutableRefObject<RapierRigidBody | null>;
+}) => {
+  const [points, setPoints] = useState(() => [
+    vec3(start.current?.translation() || new Vector3()),
+    vec3(end.current?.translation() || new Vector3()),
+  ]);
 
-  // return null;
+  useFrame(() => {
+    setPoints([
+      vec3(start.current?.translation() || new Vector3()),
+      vec3(end.current?.translation() || new Vector3()),
+    ]);
+  });
+
+  return (
+    <Line
+      lineWidth={3}
+      color="#000000"
+      // start={vec3(prev.current?.translation() || new Vector3())}
+      // end={vec3(next.current?.translation() || new Vector3())}
+      points={points}
+    />
+  );
 };
 
 // wire end copies the position of the
@@ -211,10 +228,11 @@ const WireEnd = forwardRef<RapierRigidBody, { target: RapierRigidBody }>(
         type="kinematicPosition"
         includeInvisible
         collisionGroups={wireCollisionGroup}
+        sensor
         ref={finalRef}
       >
-        <Sphere args={[0.25]} visible={false}>
-          <meshBasicMaterial color="black" attach="material" />
+        <Sphere args={[0.25]} visible={true}>
+          <meshBasicMaterial color="green" attach="material" />
         </Sphere>
       </RigidBody>
     );

@@ -6,18 +6,21 @@ import { RapierRigidBody as RigidBody } from "@react-three/rapier";
 import type { KinematicCharacterController } from "@dimforge/rapier3d-compat";
 import { ToolData } from "./lib/tools/data";
 
+/* prettier-ignore */
 export const PhysicsCollision = {
-  Player: 0b0000_0000_0000_0001,
-  Terrain: 0b0000_0000_0000_0010,
-  Tool: 0b0000_0000_0000_0100,
-  Wire: 0b0000_0000_0000_1000,
+  Player:  0b0000_0000_0000_0000_0000_0000_0000_0001,
+  Terrain: 0b0000_0000_0000_0000_0000_0000_0000_0010,
+  Tool:    0b0000_0000_0000_0000_0000_0000_0000_0100,
+  Wire:    0b0000_0000_0000_0000_0000_0000_0000_1000,
+  All:     0b0000_0000_0000_0000_0000_0000_1111_1111,
 };
+/* prettier-ignore */
 export const PhysicsGroup = {
-  Player: 0b0000_0001_0000_0000,
-  Terrain: 0b0000_0010_0000_0000,
-  Tool: 0b0000_0100_0000_0000,
-  Wire: 0b0000_1000_0000_0000,
-  All: 0b1111_1111_0000_0000,
+  Player:  0b0000_0000_0000_0001_0000_0000_0000_0000,
+  Terrain: 0b0000_0000_0000_0010_0000_0000_0000_0000,
+  Tool:    0b0000_0000_0000_0100_0000_0000_0000_0000,
+  Wire:    0b0000_0000_0000_1000_0000_0000_0000_0000,
+  All:     0b1111_1111_1111_1111_0000_0000_0000_0000,
 };
 
 export const UpdatePriority = {

@@ -68,7 +68,7 @@ export const PlayerSystem = () => {
 
     tmpVelocity.copy(vec3(rigidBody.linvel()));
     const grounded = controller.computedGrounded();
-
+    if (grounded) console.debug("grounded");
     if (input.jump && grounded) {
       console.log("jump");
       jumping = true;
@@ -101,7 +101,7 @@ export const PlayerSystem = () => {
     controller.computeColliderMovement(
       collider,
       tmpInputVec,
-      PhysicsCollision.Wire & PhysicsGroup.Wire
+      PhysicsCollision.Wire
       // (collider) => {
       //   const match = (collider.parent()?.userData as any).type === "wire";
       //   matches++;

@@ -107,9 +107,9 @@ function TerrainChunk({ entity }: { entity: Chunk }) {
           type="fixed"
           position={position}
           collisionGroups={
-            PhysicsGroup.Terrain &
-            PhysicsCollision.Player &
-            PhysicsCollision.Tool &
+            PhysicsGroup.Terrain |
+            PhysicsCollision.Player |
+            PhysicsCollision.Tool |
             PhysicsCollision.Wire
           }
           // rotation={new Euler(0, Math.PI, -Math.PI)}
