@@ -1,22 +1,14 @@
-import {
-  CameraControls,
-  Environment,
-  FlyControls,
-  Loader,
-  OrbitControls,
-  OrthographicCamera,
-  PerspectiveCamera,
-} from "@react-three/drei";
-import { StrictMode, Suspense } from "react";
+import { Environment, Loader, PerspectiveCamera } from "@react-three/drei";
+import { Physics } from "@react-three/rapier";
+import { Suspense } from "react";
 import * as RC from "render-composer";
-import { Player } from "./entities/Player";
-import { PixelationEffect } from "./lib/PixelationEffect";
-import { ECS } from "./state";
 import { Systems } from "./Systems";
-import { Debug, Physics } from "@react-three/rapier";
+import { Player } from "./entities/Player";
 import { Terrain } from "./entities/Terrain";
 import { Tools } from "./entities/Tools";
 import { Wires } from "./entities/Wires";
+import { PixelationEffect } from "./lib/PixelationEffect";
+import { ECS } from "./state";
 
 function App() {
   return (
@@ -51,6 +43,7 @@ function App() {
               <Terrain />
               <Tools />
               <Wires />
+              {/* <Resources /> */}
 
               <Systems />
               {/* <Debug /> */}

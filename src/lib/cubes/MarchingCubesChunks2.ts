@@ -1,7 +1,5 @@
 import { createNoise3D } from "simplex-noise";
-import { edgeTable, cornerOffsets } from "./cubesValues";
-import { triTable as triTable } from "./cubesValues2";
-import { LinearToSRGB } from "three/src/math/ColorManagement";
+import { triTable, edgeTable, cornerOffsets } from "./cubesValues";
 
 const noise = createNoise3D();
 

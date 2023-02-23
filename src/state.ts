@@ -5,6 +5,7 @@ import { Object3D } from "three";
 import { RapierRigidBody as RigidBody } from "@react-three/rapier";
 import type { KinematicCharacterController } from "@dimforge/rapier3d-compat";
 import { ToolData } from "./lib/tools/data";
+import { ResourceData, ResourceKind } from "./lib/resources/types";
 
 /* prettier-ignore */
 export const PhysicsCollision = {
@@ -53,6 +54,7 @@ export type Entity = {
     x: number;
     y: number;
     z: number;
+    resources: ResourceData[];
   };
   chunkRevealed?: boolean;
 
@@ -74,6 +76,10 @@ export type Entity = {
   render?: ReactNode;
 
   chunkRevealer?: boolean;
+
+  inventoryResources?: {
+    [Kind in ResourceKind]: number;
+  };
 };
 
 export type Player = With<Entity, "isPlayer" | "rigidBody">;
@@ -96,12 +102,22 @@ const halfMapSize = MAP_SIZE / 2;
 for (let x = -halfMapSize; x < halfMapSize; x += 1) {
   for (let y = -halfMapSize; y < halfMapSize; y += 1) {
     for (let z = -1; z < MAP_HEIGHT; z += 1) {
-      // const z = 0;
-      // entities.push(
       ECS.world.add({
-        terrainChunk: { x, y, z },
+        terrainChunk: {
+          x,
+          y,
+          z,
+          resources: new Array(4).fill(null).map(() => ({
+            kind: Math.floor(Math.random() * 5) + 1,
+            quantity: Math.floor(Math.random() * 100) + 1,
+            position: [
+              x * CHUNK_SIZE + Math.random() * CHUNK_SIZE,
+              y * CHUNK_SIZE + Math.random() * CHUNK_SIZE,
+              z * CHUNK_SIZE + Math.random() * CHUNK_SIZE,
+            ],
+          })),
+        },
       });
-      // );
     }
   }
 }

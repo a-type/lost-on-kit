@@ -21,11 +21,11 @@ export function toThreeGeometry(data: {
   if (data.positionArray.length > 0) {
     // console.log("Has positions");
     if (data.positionArray.some((v) => isNaN(v))) {
-      console.log("NANs in position array!");
+      console.warn("NANs in position array!");
     }
     positionArray = data.positionArray;
   } else {
-    console.log("No positions");
+    console.debug("No positions");
   }
   const positionAttr = new BufferAttribute(positionArray, 3);
   positionAttr.setUsage(DynamicDrawUsage);

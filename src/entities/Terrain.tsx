@@ -1,8 +1,12 @@
-import { MarchingCube, MarchingCubes, MarchingPlane } from "@react-three/drei";
+import {
+  Box,
+  MarchingCube,
+  MarchingCubes,
+  MarchingPlane,
+} from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { BufferGeometry, Color, Euler } from "three";
-import { generateVoxelGeometries } from "../lib/cubes/generateVoxelGeometries";
 import { generateMap, TerrainMap } from "../lib/map/generateMap";
 import {
   Chunk,
@@ -13,13 +17,14 @@ import {
   PhysicsGroup,
   PhysicsCollision,
 } from "../state";
-import { MarchingCubesChunks } from "../lib/cubes/MarchingCubesChunks";
 import { perlin3 } from "../lib/noise/perlin";
 import { toThreeGeometry } from "../lib/cubes/toThreeGeometry";
 import { ErrorBoundary } from "../ErrorBoundary";
 import { useConst } from "@hmans/use-const";
 import { MarchingCubesChunks2 } from "../lib/cubes/MarchingCubesChunks2";
 import { terrainNoise } from "../lib/map/terrainNoise";
+import { map } from "../lib/map/map";
+import { ResourceData, ResourceKind } from "../lib/resources/types";
 
 export interface TerrainProps {}
 
@@ -36,14 +41,6 @@ export function Terrain({}: TerrainProps) {
 }
 
 function TerrainChunk({ entity }: { entity: Chunk }) {
-  const map = useConst(
-    () =>
-      new MarchingCubesChunks2({
-        getCell: terrainNoise,
-        chunkSize: CHUNK_SIZE,
-      })
-  );
-  (window as any).map = map;
   const geometry = useMarchingCubesGeometry(map, entity);
 
   const debugColor = useMemo(() => {
@@ -87,6 +84,11 @@ function TerrainChunk({ entity }: { entity: Chunk }) {
           </mesh>
         </RigidBody>
       </ECS.Component>
+      <group position={position}>
+        {entity.terrainChunk.resources.map((resource, i) => (
+          <Resource key={i} resource={resource} />
+        ))}
+      </group>
     </ErrorBoundary>
   );
 }
@@ -98,8 +100,30 @@ function useMarchingCubesGeometry(map: MarchingCubesChunks2, chunk: Chunk) {
       chunk.terrainChunk.y,
       chunk.terrainChunk.z
     );
-    console.log(result);
     return toThreeGeometry(result);
   });
   return geometry;
+}
+
+function Resource({ resource }: { resource: ResourceData }) {
+  return (
+    <Box args={[1.05, 1.05, 1.05]} position={resource.position}>
+      <meshStandardMaterial color={getColor(resource.kind)} attach="material" />
+    </Box>
+  );
+}
+
+function getColor(kind: ResourceKind) {
+  switch (kind) {
+    case ResourceKind.Blue:
+      return "blue";
+    case ResourceKind.Green:
+      return "green";
+    case ResourceKind.Red:
+      return "red";
+    case ResourceKind.Purple:
+      return "purple";
+    case ResourceKind.Gold:
+      return "yellow";
+  }
 }

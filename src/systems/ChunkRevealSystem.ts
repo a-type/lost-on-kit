@@ -45,8 +45,6 @@ export function ChunkRevealSystem() {
         ECS.world.removeComponent(chunk, "chunkRevealed");
       }
     }
-
-    console.log(revealed.size);
   });
 
   return null;

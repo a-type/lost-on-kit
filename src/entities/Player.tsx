@@ -3,6 +3,7 @@ import { RigidBody, useRapier } from "@react-three/rapier";
 import { useEffect, useState } from "react";
 import { ECS, PhysicsCollision, PhysicsGroup } from "../state";
 import { useCharacterController } from "../lib/useCharacterController";
+import { ResourceKind } from "../lib/resources/types";
 
 export function Player() {
   const controller = useCharacterController({
@@ -46,6 +47,16 @@ export function Player() {
       </ECS.Component>
       <ECS.Component name="spatialHashing" data={true} />
       <ECS.Component name="neighbors" data={[]} />
+      <ECS.Component
+        name="inventoryResources"
+        data={{
+          [ResourceKind.Blue]: 0,
+          [ResourceKind.Green]: 0,
+          [ResourceKind.Red]: 0,
+          [ResourceKind.Purple]: 0,
+          [ResourceKind.Gold]: 0,
+        }}
+      />
     </ECS.Entity>
   );
 }
